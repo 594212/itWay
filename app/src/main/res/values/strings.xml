@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">itWay</string>
-    <string name="app_in_name">itWay</string>
+    <string name="app_name">itWayTwo</string>
+    <string name="app_in_name">itWayTwo</string>
     <string name="app_name_after">Register App</string>
     <string name="text_bottom">Войдите в свою учетную запись!</string>
     <string name="btnSignIn">Войти</string>
