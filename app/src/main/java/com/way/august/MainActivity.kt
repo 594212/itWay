@@ -10,7 +10,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
-    private val authViewModel = AuthViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,8 +21,10 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    private fun showSingnInWindow() {
+    private fun showSingnInWindow(){
+        val authViewModel = AuthViewModel()
         val dialog = AlertDialog.Builder(this)
+
         dialog.setTitle("Войти")
         dialog.setMessage("Введите данные для входа")
         val inflater = LayoutInflater.from(this)
@@ -45,20 +46,20 @@ class MainActivity : AppCompatActivity() {
 
         authViewModel.state.observe(this@MainActivity){state ->
             when(state){
-                is LoginState.SucceededState ->{
+                is AuthState.SucceededState ->{
                     Toast.makeText(dialog.context,"Вход произведен успешно",Toast.LENGTH_LONG).show()
                 }
 
-                is LoginState.ErrorState<*>->{
+                is AuthState.ErrorState<*>->{
                     when(state.message){
                         is Int -> Toast.makeText(dialog.context,getString(state.message),Toast.LENGTH_LONG).show()
                         is String -> Toast.makeText(dialog.context,state.message,Toast.LENGTH_LONG).show()
                     }
                 }
-                is LoginState.DefaultState ->{
+                is AuthState.DefaultState ->{
                     //DefaultState script
                 }
-                is LoginState.SendingState ->{
+                is AuthState.SendingState ->{
                     //SendingState script
                 }
             }
@@ -73,7 +74,9 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun showRegisterWindow() {
+        val authViewModel = AuthViewModel()
         val  dialog = AlertDialog.Builder(this)
+
         dialog.setTitle("Зарегистрироваться")
         dialog.setMessage("Введите все данные для регистрации")
 
@@ -99,19 +102,19 @@ class MainActivity : AppCompatActivity() {
 
         authViewModel.state.observe(this@MainActivity){ state->
             when(state){
-                is RegisterState.SucceededState->{
-
+                is AuthState.SucceededState->{
+                    Toast.makeText(dialog.context,"Регистрация заверщена",Toast.LENGTH_LONG).show()
                 }
-                is RegisterState.ErrorState<*>->{
+                is AuthState.ErrorState<*>->{
                     when(state.message){
                         is Int -> Toast.makeText(dialog.context,getString(state.message),Toast.LENGTH_LONG).show()
                         is String -> Toast.makeText(dialog.context,state.message,Toast.LENGTH_LONG).show()
                     }
                 }
-                is RegisterState.DefaultState->{
+                is AuthState.DefaultState->{
                     //DefaultState script
                 }
-                is RegisterState.SendingState->{
+                is AuthState.SendingState->{
                     //SendingState script
                 }
             }
