@@ -1,25 +1,22 @@
 package com.way.august
 
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.rengwuxian.materialedittext.MaterialEditText
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.register_window.view.*
-import kotlinx.android.synthetic.main.sign_in_window.view.*
-import kotlinx.android.synthetic.main.sign_in_window.view.emailField
-import kotlinx.android.synthetic.main.sign_in_window.view.passField
 
 
 class MainActivity : AppCompatActivity() {
+    private val authViewModel = AuthViewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         btnSignIn.setOnClickListener(){showSingnInWindow()}
         btnRegister.setOnClickListener(){showRegisterWindow()}
-
 
     }
 
@@ -34,14 +31,42 @@ class MainActivity : AppCompatActivity() {
         dialog.setView(signInWindow)
 
 
+        val email: MaterialEditText = signInWindow.findViewById(R.id.emailField)
+        val pass: MaterialEditText = signInWindow.findViewById(R.id.passField)
 
-        dialog.setNegativeButton("Отмена") { dialogInterface, which -> dialogInterface.dismiss() }
+
+        dialog.setNegativeButton("Отмена") { dialogInterface, which -> dialogInterface.dismiss()}
+
         dialog.setPositiveButton("Войти"){
             dialogInterface,which ->
-                login(signInWindow.emailField,signInWindow.passField)
+            authViewModel.login(email = email.text.toString(),pass = pass.text.toString())
                 }
 
+
+        authViewModel.state.observe(this@MainActivity){state ->
+            when(state){
+                is LoginState.SucceededState ->{
+                    Toast.makeText(dialog.context,"Вход произведен успешно",Toast.LENGTH_LONG).show()
+                }
+
+                is LoginState.ErrorState<*>->{
+                    when(state.message){
+                        is Int -> Toast.makeText(dialog.context,getString(state.message),Toast.LENGTH_LONG).show()
+                        is String -> Toast.makeText(dialog.context,state.message,Toast.LENGTH_LONG).show()
+                    }
+                }
+                is LoginState.DefaultState ->{
+                    //DefaultState script
+                }
+                is LoginState.SendingState ->{
+                    //SendingState script
+                }
+            }
+
+        }
+
         dialog.show()
+
     }
 
 
@@ -53,8 +78,14 @@ class MainActivity : AppCompatActivity() {
         dialog.setMessage("Введите все данные для регистрации")
 
         val inflater = LayoutInflater.from(this)
-        val registerWindow = inflater.inflate(R.layout.register_window,null)
+        val registerWindow = inflater.inflate(R.layout.register_window, null)
         dialog.setView((registerWindow))
+
+        val email: MaterialEditText = registerWindow.findViewById(R.id.emailField)
+        val pass: MaterialEditText = registerWindow.findViewById(R.id.passField)
+        val name: MaterialEditText = registerWindow.findViewById(R.id.nameField)
+        val phone: MaterialEditText = registerWindow.findViewById(R.id.phoneField)
+
         dialog.setNegativeButton("Отмена"){
             dialogInterface, which->
             dialogInterface.dismiss()
@@ -62,12 +93,37 @@ class MainActivity : AppCompatActivity() {
         dialog.setPositiveButton("Создать"){
             dialogInterface,which->
 
-            register(registerWindow.emailField,registerWindow.passField,
-                    registerWindow.nameField, registerWindow.phoneField)
+            authViewModel.register(email = email.text.toString(), pass = pass.text.toString(),
+                    name = name.text.toString(), phone = phone.text.toString())
         }
-        dialog.show()
 
+        authViewModel.state.observe(this@MainActivity){ state->
+            when(state){
+                is RegisterState.SucceededState->{
+
+                }
+                is RegisterState.ErrorState<*>->{
+                    when(state.message){
+                        is Int -> Toast.makeText(dialog.context,getString(state.message),Toast.LENGTH_LONG).show()
+                        is String -> Toast.makeText(dialog.context,state.message,Toast.LENGTH_LONG).show()
+                    }
+                }
+                is RegisterState.DefaultState->{
+                    //DefaultState script
+                }
+                is RegisterState.SendingState->{
+                    //SendingState script
+                }
+            }
+
+        }
+
+
+        dialog.show()
     }
+
+
+
 
 
 
