@@ -5,4 +5,7 @@
     <string name="text_bottom">Войдите в свою учетную запись!</string>
     <string name="btnSignIn">Войти</string>
     <string name="btnRegister">Зарегистрироваться</string>
+    <string name="email_invalid">"Неверный форман почты "</string>
+    <string name="auth_validate_faild">Неверна набрана почта или пароль</string>
+    <string name="pass_invalid">Пароль должен содержать не меньше 5 символов</string>
 </resources>
