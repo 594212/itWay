@@ -1,38 +1,46 @@
 package com.way.august
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.way.august.http.common.ResponseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class AuthViewModel {
+class AuthViewModel: ViewModel() {
 
     val state = MutableLiveData<AuthState>().default(initiaValue = AuthState.DefaultState())
-    val AuthRepositoryImpl = AuthRepositoryImpl()
+    private val authRepositoryImpl = AuthRepositoryImpl()
 
     fun login(email: String, pass: String) {
-        if(!validateEmail(email = email)){
+        if (!validateEmail(email = email)) {
             state.set(newValue = AuthState.ErrorState<Int>(message = R.string.email_invalid))
             return
         }
-        if (!validatePass(pass = pass)){
+        if (!validatePass(pass = pass)) {
             state.set(newValue = AuthState.ErrorState<Int>(message = R.string.auth_validate_faild))
             return
         }
 
         //connect DB
-        CoroutineScope(Dispatchers.IO).async {
-            val errorMessage = AuthRepositoryImpl.login(email = email,
-                password = pass)
-            if(errorMessage is ResponseAuth){
-                launch { state.set(newValue = AuthState.SucceededState()) }
-            }else{
-                launch { state.set(newValue = AuthState.ErrorState(message = errorMessage)) }
-            }
-
-        }
+//        CoroutineScope(Dispatchers.IO).launch {
+//            Log.v("succeeded token:","I'm here")
+//
+//            val errorMessage = authRepositoryImpl.login(email = email,
+//                password = pass)
+//            Log.v("succeeded token:", errorMessage.accessToken)
+//
+//            if (errorMessage is ResponseAuth){
+//                launch(Dispatchers.Main) {
+//                    Log.v("succeeded token:", errorMessage.accessToken)
+//                    state.set(newValue = AuthState.SucceededState()) }
+//            }else{
+//                launch(Dispatchers.Main) { state.set(newValue = AuthState.ErrorState(message = errorMessage)) }
+//            }
+//
+//        }
 
     }
 
@@ -49,13 +57,13 @@ class AuthViewModel {
 
         //connect DB
         CoroutineScope(Dispatchers.IO).async {
-            val errorMessage = AuthRepositoryImpl.register(email = email, password = pass,
+            val errorMessage = authRepositoryImpl.register(email = email, password = pass,
             phone = phone, name = name)
 
             if(errorMessage is ResponseAuth){
-                launch { state.set(newValue = AuthState.SucceededState()) }
+                launch(Dispatchers.Main) { state.set(newValue = AuthState.SucceededState()) }
             }else{
-                launch { state.set(newValue = AuthState.ErrorState(message = errorMessage)) }
+                launch(Dispatchers.Main) { state.set(newValue = AuthState.ErrorState(message = errorMessage)) }
             }
 
         }

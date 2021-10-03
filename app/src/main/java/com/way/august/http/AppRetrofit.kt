@@ -8,9 +8,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 object AppRetrofit {
     private val BASE_URL = "http://it-cabinet.tk/"
     private val retrofit: ApiRetrofit by lazy(
-        ::configurateRetrofit)
+        ::configurateRetrofit
+    )
 
-    private fun configurateRetrofit():ApiRetrofit {
+    private fun configurateRetrofit(): ApiRetrofit {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
         httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
@@ -27,7 +28,7 @@ object AppRetrofit {
 
     }
 
-    fun get(): ApiRetrofit{
+    fun get(): ApiRetrofit {
         return retrofit
     }
 

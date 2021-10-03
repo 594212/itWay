@@ -21,8 +21,9 @@ interface ApiRetrofit {
     @POST("api/login")
     @Headers("Accept: application/json")
     suspend fun login(@Body requestLogin:RequestLog): Call<ResponseAuth>
+
     @POST("api/register")
-    @Headers("Accept: application/json")
+    @Headers("Accept: application/json") //intersepter
     suspend fun register(@Body requestReg: RequestReg): Call<ResponseAuth>
 
 }

@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.way.august"
-        minSdkVersion 19
+        minSdkVersion 22
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -45,7 +45,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0' // extension - xml join
-    implementation 'com.rengwuxian.materialedittext:library:2.1.4' // interesting field
+    implementation "com.rengwuxian.materialedittext:library:2.1.4" // interesting field
 
 
     //retrofit
